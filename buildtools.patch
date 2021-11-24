@@ -1,0 +1,20 @@
+--- pomm.xml	2021-11-17 18:22:41.000000000 -0600
++++ pommm.xml	2021-11-17 17:56:47.000000000 -0600
+@@ -1506,7 +1506,7 @@
+             <dependency>
+                 <groupId>org.apache.atlas</groupId>
+                 <artifactId>atlas-buildtools</artifactId>
+-                <version>${project.version}</version>
++                <version>0.8.1</version>
+             </dependency>
+ 
+             <dependency>
+@@ -2161,7 +2161,7 @@
+                     <dependency>
+                         <groupId>org.apache.atlas</groupId>
+                         <artifactId>atlas-buildtools</artifactId>
+-                        <version>1.0</version>
++                        <version>0.8.1</version>
+                     </dependency>
+                 </dependencies>
+                 <executions>

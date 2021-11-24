@@ -1,0 +1,66 @@
+--- atlas_config-orig.py	2021-11-17 21:03:21.000000000 -0600
++++ atlas_config.py	2021-11-21 20:06:58.000000000 -0600
+@@ -531,13 +531,16 @@
+     count = 0
+     host = get_atlas_url_host(confdir)
+     port = get_atlas_url_port(confdir)
+-    while True:
++    pid_file = pidFile(atlasDir())
++
++    started = False
++    while not started:
+         try:
+             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+             s.settimeout(1)
+             s.connect((host, int(port)))
+             s.close()
+-            break
++            started = True
+         except Exception as e:
+             # Wait for 1 sec before next ping
+             sys.stdout.write('.')
+@@ -546,8 +549,16 @@
+ 
+         if count > wait:
+             s.close()
++            sys.stdout.write('\nAtlas Web-UI startup timed out! But, wait for it...')
++            sys.stdout.flush()
+             break
+ 
++            if not os.path.exists(pid_file):
++                sys.stdout.write('\nApache Atlas startup failed!\nCheck logs: /opt/apache-atlas-2.1.0/logs/application.log')
++                sys.stdout.flush()
++            exit()
++        break
++
+         count = count + 1
+ 
+     sys.stdout.write('\n')
+@@ -584,14 +595,14 @@
+ 
+     if zk_url is None:
+         if port is None:
+-            cmd = [os.path.join(dir, solrScript), action]
++            cmd = [os.path.join(dir, solrScript), action, '-force']
+         else:
+-            cmd = [os.path.join(dir, solrScript), action, '-p', str(port)]
++            cmd = [os.path.join(dir, solrScript), action, '-force', '-p', str(port)]
+     else:
+         if port is None:
+-            cmd = [os.path.join(dir, solrScript), action, '-z', zk_url]
++            cmd = [os.path.join(dir, solrScript), action, '-force', '-z', zk_url]
+         else:
+-            cmd = [os.path.join(dir, solrScript), action, '-z', zk_url, '-p', port]
++            cmd = [os.path.join(dir, solrScript), action, '-force', '-z', zk_url, '-p', port]
+ 
+     if homedir is not None:
+         if not os.path.exists(homedir) :
+@@ -614,7 +625,7 @@
+     if IS_WINDOWS:
+         solrScript = "solr.cmd"
+ 
+-    cmd = [os.path.join(dir, solrScript), 'create', '-c', index, '-d', confdir,  '-shards',  solrShards(),  '-replicationFactor', solrReplicationFactor()]
++    cmd = [os.path.join(dir, solrScript), 'create', '-c', index, '-d', confdir,  '-shards',  solrShards(),  '-replicationFactor', solrReplicationFactor(), '-force']
+ 
+     return runProcess(cmd, logdir, False, wait)
+ 

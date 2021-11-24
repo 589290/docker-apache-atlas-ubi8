@@ -1,0 +1,63 @@
+--- atlas_start-orig.py	2021-11-17 21:03:33.000000000 -0600
++++ atlas_start.py	2021-11-18 09:41:12.000000000 -0600
+@@ -18,6 +18,9 @@
+ import os
+ import sys
+ import traceback
++import os.path
++import time
++from time import sleep
+ 
+ import atlas_config as mc
+ 
+@@ -118,6 +121,10 @@
+ 
+         print("Local HBase started!")
+ 
++        if is_setup:
++            print ("Sleeping 60s due to setup (init run)...")
++            sleep(60)
++
+     #solr setup
+     if mc.is_solr_local(confdir):
+         print("\nConfigured for local Solr.")
+@@ -136,6 +143,10 @@
+ 
+         print("Local Solr started!")
+ 
++        if is_setup:
++            print ("Sleeping 60s due to setup (init run)...")
++            sleep(60)
++
+         print("\nCreating Solr collections for Atlas using config: " + mc.solrConfDir(atlas_home))
+ 
+         mc.create_solr_collection(mc.solrBinDir(atlas_home), mc.solrConfDir(atlas_home), "vertex_index", logdir)
+@@ -155,8 +166,26 @@
+         web_app_path = mc.convertCygwinPath(web_app_path)
+     if not is_setup:
+         start_atlas_server(atlas_classpath, atlas_pid_file, jvm_logdir, jvm_opts_list, web_app_path)
+-        mc.wait_for_startup(confdir, 300)
+-        print("Apache Atlas Server started!!!\n")
++        mc.wait_for_startup(confdir, 600)
++        print ("Apache Atlas Server process started!\n")
++
++        atlas_pid_file = mc.pidFile(atlas_home)
++        try:
++            pf = file(atlas_pid_file, 'r')
++            pid = int(pf.read().strip())
++            pf.close()
++            print("Running Apache Atlas with PID " + str(pid) + "...\n")
++        except:
++            pid = None
++        if not pid:
++            sys.stderr.write("No PID file found! Server is not running?\nCheck logs: /opt/apache-atlas-2.2.0/logs/application.log\n\n")
++            return
++
++        while os.path.exists(atlas_pid_file):
++            time.sleep(1)
++
++        print ("Apache Atlas stopped!\n")
++
+     else:
+         process = mc.java("org.apache.atlas.web.setup.AtlasSetup", [], atlas_classpath, jvm_opts_list, jvm_logdir)
+         return process.wait()
