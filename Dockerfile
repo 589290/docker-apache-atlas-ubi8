@@ -54,8 +54,5 @@ COPY atlas-env.sh /opt/apache-atlas-${ATLAS_VERSION}/conf/atlas-env.sh
 #    && sleep 10 \
 #    && python3 /opt/apache-atlas-${ATLAS_VERSION}/bin/atlas_stop.py
 
-#RUN apt-get -y install tmux
-#COPY ./entrypoint.sh /entrypoint.sh
-#ENTRYPOINT ["/entrypoint.sh"]
-
-# /opt/apache-atlas-2.2.0/bin/atlas_start.py
+COPY ./entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
