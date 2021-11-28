@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # The java implementation to use. If JAVA_HOME is not found we expect java and jar to be in path
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+#export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.312.b07-2.el8_5.x86_64
+export JAVA_HOME=/etc/alternatives/java_sdk_1.8.0_openjdk
 
 # any additional java opts you want to set. This will apply to both client and server operations
 #export ATLAS_OPTS=

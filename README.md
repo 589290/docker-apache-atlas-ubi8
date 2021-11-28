@@ -5,7 +5,7 @@
 Apache Atlas Docker image
 =======================================
 
-This `Apache Atlas` is built from the 2.2.0-release source tarball and patched to be run in a Docker container.
+`Apache Atlas` from the 2.2.0 release source tarball, patched for better docker/maven compatibility, and built using the IronBank [ubi8](https://ironbank.dso.mil/repomap/details;image=ubi8) base image. The [Red Hat ubi](https://catalog.redhat.com/software/containers/ubi8/ubi/5c359854d70cc534b3a3784e) can be substituted in place of the IronBank image.
 
 Atlas is built with `embedded HBase + Solr` and it is pre-initialized, so you can use it right after image download without additional steps.
 
@@ -16,7 +16,7 @@ Basic usage
 1. Pull the latest release image:
 
 ```bash
-docker pull 589290/apache-atlas
+docker pull 589290/apache-atlas-ubi8
 ```
 
 2. Start Apache Atlas in a container exposing Web-UI port 21000:

@@ -1,13 +1,13 @@
-ARG ATLAS_VERSION=2.2.0
 ARG BASE_REGISTRY=registry1.dso.mil
 ARG BASE_IMAGE=ironbank/redhat/ubi/ubi8
 ARG BASE_TAG=8.5
 FROM ${BASE_REGISTRY}/${BASE_IMAGE}:${BASE_TAG}
-USER 0
+ARG ATLAS_VERSION=2.2.0
 
 RUN yum update
 RUN yum upgrade
-RUN yum install java-1.8.0-openjdk-devel python3 wget patch unzip
+RUN yum -y install java-1.8.0-openjdk-devel python3 wget patch unzip
+RUN alternatives --set python /usr/bin/python3
 RUN cd /usr/local \
     && wget https://www-eu.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
     && tar -xzvf apache-maven-3.6.3-bin.tar.gz \
@@ -24,6 +24,7 @@ RUN cd /tmp/atlas-src \
     && patch pom.xml buildtools.patch
 
 RUN cd /tmp/atlas-src \
+    && export JAVA_HOME="/etc/alternatives/java_sdk_1.8.0_openjdk" \
     && export M2_HOME="/usr/local/apache-maven" \
     && export MAVEN_HOME="/usr/local/apache-maven" \
     && export PATH=${M2_HOME}/bin:${PATH} \
@@ -43,16 +44,18 @@ RUN cd /opt/apache-atlas-${ATLAS_VERSION}/bin \
 
 COPY atlas-env.sh /opt/apache-atlas-${ATLAS_VERSION}/conf/atlas-env.sh
 
-RUN cd /opt/apache-atlas-${ATLAS_VERSION} \
-    && ./bin/atlas_start.py -setup || true
+#RUN cd /opt/apache-atlas-${ATLAS_VERSION} \
+#    && ./bin/atlas_start.py -setup || true
 
-RUN cd /opt/apache-atlas-${ATLAS_VERSION} \
-    && ./bin/atlas_start.py & \
-    touch /opt/apache-atlas-${ATLAS_VERSION}/logs/application.log \
-    && tail -f /opt/apache-atlas-${ATLAS_VERSION}/logs/application.log | sed '/AtlasAuthenticationFilter.init(filterConfig=null)/ q' \
-    && sleep 10 \
-    && /opt/apache-atlas-${ATLAS_VERSION}/bin/atlas_stop.py
+#RUN cd /opt/apache-atlas-${ATLAS_VERSION} \
+#    && ./bin/atlas_start.py & \
+#    touch /opt/apache-atlas-${ATLAS_VERSION}/logs/application.log \
+#    && tail -f /opt/apache-atlas-${ATLAS_VERSION}/logs/application.log | sed '/AtlasAuthenticationFilter.init(filterConfig=null)/ q' \
+#    && sleep 10 \
+#    && python3 /opt/apache-atlas-${ATLAS_VERSION}/bin/atlas_stop.py
 
 #RUN apt-get -y install tmux
 #COPY ./entrypoint.sh /entrypoint.sh
 #ENTRYPOINT ["/entrypoint.sh"]
+
+# /opt/apache-atlas-2.2.0/bin/atlas_start.py
