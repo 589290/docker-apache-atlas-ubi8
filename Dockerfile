@@ -6,7 +6,7 @@ ARG ATLAS_VERSION=2.2.0
 
 RUN yum update
 RUN yum upgrade
-RUN yum -y install java-1.8.0-openjdk-devel python3 wget patch unzip
+RUN yum -y install java-1.8.0-openjdk-devel python3 wget patch unzip procps ncurses lsof
 RUN alternatives --set python /usr/bin/python3
 RUN cd /usr/local \
     && wget https://www-eu.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
