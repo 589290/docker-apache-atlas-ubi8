@@ -19,18 +19,36 @@ Basic usage
 docker pull 589290/apache-atlas-ubi8:latest
 ```
 
-2. Start Apache Atlas in a container exposing Web-UI port 21000:
+2. Start Apache Atlas in a container exposing the web interface on port 21000:
 
 ```bash
 docker run -d \
-    -p 21000:21000 \
     --name atlas \
+    -p 21000:21000 \
     589290/apache-atlas-ubi8:latest
 ```
 
+3. (OPTIONAL) Start Apache Atlas exposing Atlas, SOLR, and HBase web interfaces:
+
+```bash
+docker run -d \
+    --name atlas \
+    -p 21000:21000 \
+    -p 9838:9838 \
+    -p 61510:61510 \
+    -p 61530:61530 \
+    589290/apache-atlas-ubi8:latest
+```
+
+4. Currently, the Atlast startup scripts error out when started at container creation. As such, to bring Atlas up, you must shell into the container and execute the setup and launch scripts manually.
+
+````bash
+docker exec -it atlas "/opt/atlas/bin/atlas_start.py -setup"
+````
+
 Please, take into account that the first startup of Atlas may take up to few mins depending on host machine performance before web-interface become available at `http://localhost:21000/`
 
-Web-UI default credentials: `admin / admin`
+Atlas web default login credentials: `admin / admin`
 
 Usage options
 -------------
@@ -38,7 +56,7 @@ Usage options
 Gracefully stop Atlas:
 
 ```bash
-docker exec -ti atlas /opt/atlas/bin/atlas_stop.py
+docker exec -it atlas /opt/atlas/bin/atlas_stop.py
 ```
 
 Check Atlas startup script output:
@@ -47,23 +65,18 @@ Check Atlas startup script output:
 docker logs atlas
 ```
 
-Check interactively Atlas application.log (useful at the first run and for debugging during workload):
-
-```bash
-docker exec -ti atlas tail -f /opt/atlas/logs/application.log
-```
-
 Run the example (this will add sample types and instances along with traits):
 
 ```bash
-docker exec -ti atlas /opt/atlas/bin/quick_start.py
+docker exec -it atlas /opt/atlas/bin/quick_start.py
 ```
 
 Start Atlas overriding settings by environment variables 
 (to support large number of metadata objects for example):
 
 ```bash
-docker run --detach \
+docker run -d \
+    --name atlas \
     -e "ATLAS_SERVER_OPTS=-server -XX:SoftRefLRUPolicyMSPerMB=0 \
     -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC \
     -XX:+CMSParallelRemarkEnabled -XX:+PrintTenuringDistribution \
@@ -72,42 +85,17 @@ docker run --detach \
     -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=1m -XX:+PrintGCDetails \
     -XX:+PrintHeapAtGC -XX:+PrintGCTimeStamps" \
     -p 21000:21000 \
-    --name atlas \
-    589290/apache-atlas-ubi8:latest \
-    /opt/atlas/bin/atlas_start.py
-```
-
-Start Atlas exposing logs directory on the host to view them directly:
-
-```bash
-docker run --detach \
-    -v ${PWD}/atlas-logs:/opt/atlas/logs \
-    -p 21000:21000 \
-    --name atlas \
-    589290/apache-atlas-ubi8:latest \
-    /opt/atlas/bin/atlas_start.py
-```
-
-Start Atlas exposing conf directory on the host to place and edit configuration files directly:
-
-```bash
-docker run --detach \
-    -v ${PWD}/pre-conf:/opt/atlas/conf \
-    -p 21000:21000 \
-    --name atlas \
-    589290/apache-atlas-ubi8:latest \
-    /opt/atlas/bin/atlas_start.py
+    589290/apache-atlas-ubi8:latest
 ```
 
 Start Atlas with data directory mounted on the host to provide its persistency:
 
 ```bash
-docker run --detach \
+docker run -d \
+    --name atlas \
     -v ${PWD}/data:/opt/atlas/data \
     -p 21000:21000 \
-    --name atlas \
-    589290/apache-atlas-ubi8:latest \
-    /opt/atlas/bin/atlas_start.py
+    589290/apache-atlas-ubi8:latest
 ```
 
 Environment Variables
@@ -117,7 +105,7 @@ The following environment variables are available for configuration:
 
 | Name | Default | Description |
 |------|---------|-------------|
-| JAVA_HOME | /usr/lib/jvm/java-8-openjdk-amd64 | The java implementation to use. If JAVA_HOME is not found we expect java and jar to be in path
+| JAVA_HOME | /etc/alternatives/java_sdk_1.8.0_openjdk | The java implementation to use. If JAVA_HOME is not found we expect java and jar to be in path
 | ATLAS_OPTS | <none> | any additional java opts you want to set. This will apply to both client and server operations
 | ATLAS_CLIENT_OPTS | <none> | any additional java opts that you want to set for client only
 | ATLAS_CLIENT_HEAP | <none> | java heap size we want to set for the client. Default is 1024MB

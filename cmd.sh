@@ -24,4 +24,6 @@ function sleepLoop(){
 }
 
 #atlasSetup && atlasRun && sleepLoop;
+
+# currently atlas setup/startup only successfully completes from attached shell
 sleepLoop;
