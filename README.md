@@ -16,7 +16,7 @@ Basic usage
 1. Pull the latest release image:
 
 ```bash
-docker pull 589290/apache-atlas-ubi8:2.2.0-3
+docker pull 589290/apache-atlas-ubi8:latest
 ```
 
 2. Start Apache Atlas in a container exposing Web-UI port 21000:
@@ -25,7 +25,7 @@ docker pull 589290/apache-atlas-ubi8:2.2.0-3
 docker run -d \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas:2.2.0-3
+    589290/apache-atlas-ubi8:latest
 ```
 
 Please, take into account that the first startup of Atlas may take up to few mins depending on host machine performance before web-interface become available at `http://localhost:21000/`
@@ -73,7 +73,7 @@ docker run --detach \
     -XX:+PrintHeapAtGC -XX:+PrintGCTimeStamps" \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas-ubi8 \
+    589290/apache-atlas-ubi8:latest \
     /opt/atlas/bin/atlas_start.py
 ```
 
@@ -84,7 +84,7 @@ docker run --detach \
     -v ${PWD}/atlas-logs:/opt/atlas/logs \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas-ubi8 \
+    589290/apache-atlas-ubi8:latest \
     /opt/atlas/bin/atlas_start.py
 ```
 
@@ -95,7 +95,7 @@ docker run --detach \
     -v ${PWD}/pre-conf:/opt/atlas/conf \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas-ubi8 \
+    589290/apache-atlas-ubi8:latest \
     /opt/atlas/bin/atlas_start.py
 ```
 
@@ -106,7 +106,7 @@ docker run --detach \
     -v ${PWD}/data:/opt/atlas/data \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas-ubi8 \
+    589290/apache-atlas-ubi8:latest \
     /opt/atlas/bin/atlas_start.py
 ```
 
@@ -132,6 +132,6 @@ The following environment variables are available for configuration:
 Bug Tracker
 -----------
 
-Bugs are tracked on [GitHub Issues](https://github.com/589290/docker-apache-atlas/issues).
+Bugs are tracked on [GitHub Issues](https://github.com/589290/docker-apache-atlas-ubi8/issues).
 In case of trouble, please check there to see if your issue has already been reported.
 If you spotted it first, help us smash it by providing detailed feedback and possibly a PR! (^_^)
