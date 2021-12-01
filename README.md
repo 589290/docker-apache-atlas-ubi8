@@ -40,7 +40,7 @@ docker run -d \
     589290/apache-atlas-ubi8:latest
 ```
 
-4. Currently, the Atlast startup scripts error out when started at container creation. As such, to bring Atlas up, you must shell into the container and execute the setup and launch scripts manually.
+4. Currently, the Atlas setup & startup scripts error when started at container creation. As such they are currently commented out. To bring Atlas up after container creation, you must shell into the running container and execute the setup and startup scripts manually.
 
 ````bash
 docker exec -it atlas "/opt/atlas/bin/atlas_start.py -setup"
