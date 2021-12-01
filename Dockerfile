@@ -36,7 +36,6 @@ RUN cd /tmp/atlas-src \
     && cd /opt \
     && mv -f apache-atlas-${ATLAS_VERSION} atlas
 
-#VOLUME ["/opt/atlas/conf", "/opt/atlas/logs"]
 VOLUME ["/opt/atlas"]
 
 COPY ./atlas_start.py.patch /opt/atlas/bin/atlas_start.py.patch

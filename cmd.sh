@@ -23,4 +23,5 @@ function sleepLoop(){
     done
 }
 
-atlasSetup && atlasRun && sleepLoop;
+#atlasSetup && atlasRun && sleepLoop;
+sleepLoop;
