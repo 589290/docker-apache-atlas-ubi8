@@ -16,7 +16,7 @@ Basic usage
 1. Pull the latest release image:
 
 ```bash
-docker pull 589290/apache-atlas-ubi8
+docker pull 589290/apache-atlas-ubi8:2.2.0-3
 ```
 
 2. Start Apache Atlas in a container exposing Web-UI port 21000:
@@ -25,8 +25,7 @@ docker pull 589290/apache-atlas-ubi8
 docker run -d \
     -p 21000:21000 \
     --name atlas \
-    589290/apache-atlas \
-    /opt/apache-atlas-2.2.0/bin/atlas_start.py
+    589290/apache-atlas:2.2.0-3
 ```
 
 Please, take into account that the first startup of Atlas may take up to few mins depending on host machine performance before web-interface become available at `http://localhost:21000/`
@@ -39,7 +38,7 @@ Usage options
 Gracefully stop Atlas:
 
 ```bash
-docker exec -ti atlas /opt/apache-atlas-2.2.0/bin/atlas_stop.py
+docker exec -ti atlas /opt/atlas/bin/atlas_stop.py
 ```
 
 Check Atlas startup script output:
@@ -51,13 +50,13 @@ docker logs atlas
 Check interactively Atlas application.log (useful at the first run and for debugging during workload):
 
 ```bash
-docker exec -ti atlas tail -f /opt/apache-atlas-2.2.0/logs/application.log
+docker exec -ti atlas tail -f /opt/atlas/logs/application.log
 ```
 
 Run the example (this will add sample types and instances along with traits):
 
 ```bash
-docker exec -ti atlas /opt/apache-atlas-2.2.0/bin/quick_start.py
+docker exec -ti atlas /opt/atlas/bin/quick_start.py
 ```
 
 Start Atlas overriding settings by environment variables 
@@ -74,41 +73,41 @@ docker run --detach \
     -XX:+PrintHeapAtGC -XX:+PrintGCTimeStamps" \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.2.0/bin/atlas_start.py
+    589290/apache-atlas-ubi8 \
+    /opt/atlas/bin/atlas_start.py
 ```
 
 Start Atlas exposing logs directory on the host to view them directly:
 
 ```bash
 docker run --detach \
-    -v ${PWD}/atlas-logs:/opt/apache-atlas-2.2.0/logs \
+    -v ${PWD}/atlas-logs:/opt/atlas/logs \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.2.0/bin/atlas_start.py
+    589290/apache-atlas-ubi8 \
+    /opt/atlas/bin/atlas_start.py
 ```
 
 Start Atlas exposing conf directory on the host to place and edit configuration files directly:
 
 ```bash
 docker run --detach \
-    -v ${PWD}/pre-conf:/opt/apache-atlas-2.2.0/conf \
+    -v ${PWD}/pre-conf:/opt/atlas/conf \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.2.0/bin/atlas_start.py
+    589290/apache-atlas-ubi8 \
+    /opt/atlas/bin/atlas_start.py
 ```
 
 Start Atlas with data directory mounted on the host to provide its persistency:
 
 ```bash
 docker run --detach \
-    -v ${PWD}/data:/opt/apache-atlas-2.2.0/data \
+    -v ${PWD}/data:/opt/atlas/data \
     -p 21000:21000 \
     --name atlas \
-    sburn/apache-atlas \
-    /opt/apache-atlas-2.2.0/bin/atlas_start.py
+    589290/apache-atlas-ubi8 \
+    /opt/atlas/bin/atlas_start.py
 ```
 
 Environment Variables
