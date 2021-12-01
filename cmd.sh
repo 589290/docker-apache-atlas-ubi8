@@ -24,8 +24,3 @@ function sleepLoop(){
 }
 
 atlasSetup && atlasRun && sleepLoop;
-
-#RUN touch /opt/atlas/logs/application.log \
-#    && tail -f /opt/atlas/logs/application.log | sed '/AtlasAuthenticationFilter.init(filterConfig=null)/ q' \
-#    && sleep 10 \
-#    && python3 /opt/atlas/bin/atlas_stop.py
